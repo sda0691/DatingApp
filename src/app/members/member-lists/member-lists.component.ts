@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class MemberListsComponent implements OnInit {
   users: User[];
-  user: User = JSON.parse(localStorage.getItem('user'));
+  user: User ; // = JSON.parse(localStorage.getItem('user'));
   genderList = [{value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}];
   userParams: any = {};
 
@@ -25,11 +25,19 @@ export class MemberListsComponent implements OnInit {
               private route: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit() {
+/* // tslint:disable-next-line: no-debugger
+debugger;    
+    this.userService.getUser(this.authService.decodedToken.nameid).subscribe((user: User) => {
+// tslint:disable-next-line: no-debugger
+debugger;
+      this.user = user;
+    }); */
+
     this.route.data.subscribe(data => {
       this.users = data['users'].result;
       this.pagination = data['users'].pagination;
     });
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = 'male'; // this.user.gender === 'female' ? 'male' : 'female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.userParams.orderBy = 'lastActive';
@@ -40,7 +48,7 @@ export class MemberListsComponent implements OnInit {
   }
  
   resetFilters() {
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = 'male'; // this.user.gender === 'female' ? 'male' : 'female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.loadUsers();
@@ -56,5 +64,5 @@ export class MemberListsComponent implements OnInit {
         this.alertify.error(error);
       }
     );
-  } 
+  }
 }

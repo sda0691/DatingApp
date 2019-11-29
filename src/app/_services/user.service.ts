@@ -19,9 +19,12 @@ import { map } from 'rxjs/operators';
 })
 export class UserService {
   baseUrl = environment.apiUrl;
+  test: string;
   constructor(private http: HttpClient) { }
 
-  getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>> {
+  getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginatedResult<User[]>> {
+    // tslint:disable-next-line: no-debugger
+    debugger;
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
     let params = new HttpParams();
     if (page != null && itemsPerPage != null) {
@@ -34,6 +37,13 @@ export class UserService {
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
       params = params.append('orderBy', userParams.orderBy);
+    }
+
+    if (likesParam === 'Likers') {
+      params = params.append('Likers', 'true');
+    }
+    if (likesParam === 'Likees') {
+      params = params.append('Likees', 'true');
     }
 
     return this.http.get<User[]>(this.baseUrl + 'users', {observe: 'response', params})
@@ -55,4 +65,10 @@ export class UserService {
   updateUser(id: number, user: User) {
     return this.http.put(this.baseUrl + 'users/' + id, user);
   }
+
+  sendLike(id: number, recipientId: number) {
+    this.test = this.baseUrl + 'user/' + id + '/like/' + recipientId;
+    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
+  }
+
 }
